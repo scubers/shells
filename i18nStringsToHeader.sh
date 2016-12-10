@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-sourceFile=$1
-targetFile=$2
+sourceFile=$1 # 源文件 .strings
+targetFile=$2 # 目标头文件 target.h
 
 function generateHfile() {
 
@@ -17,11 +17,11 @@ function generateHfile() {
 
     cat $1 | while read line
     do
-        echo $line|grep -e "\"[^0-9][a-zA-Z_0-9\-]*\" *= *\".*\";" > /dev/null
+        echo $line|grep -e "\"[a-zA-Z0-9_\-]*\" *= *\".*\";" > /dev/null
         if [ $? -eq 0 ];then 
             value=`echo $line | sed "s/ *=.*;//g"|sed "s/\"//g"`
             key=`echo $value|sed "s/\-/_/g"`
-            string="static NSString * const $key = @\"$value\";"
+            string="static NSString * const i18n_$key = @\"$value\";"
             echo "// $line" >> $2
             echo "$string" >> $2
         fi
