@@ -2,8 +2,8 @@
 
 
 
-sourceDir=$1
-targetFile=$2
+sourceDir=$1 # 源目录 Assets.assets
+targetFile=$2 # 生成的头文件路径
 
 
 function generationImageHForDir() {

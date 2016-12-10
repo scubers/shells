@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-sourceFile=$1
-targetFile=$2
+sourceFile=$1 # 源文件路径  Localizable.strings
+targetFile=$2 # 目标头文件路径 xxx.h
 
 function generateHfile() {
 
