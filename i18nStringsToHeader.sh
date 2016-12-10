@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-sourceFile=$1 # 源文件路径  Localizable.strings
-targetFile=$2 # 目标头文件路径 xxx.h
+sourceFile=$1
+targetFile=$2
 
 function generateHfile() {
 
@@ -17,10 +17,12 @@ function generateHfile() {
 
     cat $1 | while read line
     do
-        echo $line|grep -e "\"[a-zA-Z_][a-zA-Z_0-9]*\" *= *\".*\";" > /dev/null
+        echo $line|grep -e "\"[^0-9][a-zA-Z_0-9\-]*\" *= *\".*\";" > /dev/null
         if [ $? -eq 0 ];then 
-            key=`echo $line | sed "s/ *=.*;//g"|sed "s/\"//g"`
-            string="static NSString * const $key = @\"$key\";///< $line"
+            value=`echo $line | sed "s/ *=.*;//g"|sed "s/\"//g"`
+            key=`echo $value|sed "s/\-/_/g"`
+            string="static NSString * const $key = @\"$value\";"
+            echo "// $line" >> $2
             echo "$string" >> $2
         fi
     done

@@ -9,11 +9,12 @@ targetFile=$2 # 生成的头文件路径
 function generationImageHForDir() {
     for name in `ls $1`
     do
-        #release_close.imageset
-        echo $name|grep -e "[a-zA-Z_0-9\-]*\.imageset" > /dev/null
+        echo $name|grep -e ".*\.imageset" > /dev/null
         if [ $? -eq 0 ];then
-            varname=`echo $name | sed "s/\.imageset//g"|sed "s/\-/_/g"`
-            echo "static NSString * const image_name_$varname = @\"${varname}\";" >> $2
+            value=`echo $name | sed "s/\.imageset//g"`
+            varname=`echo $value|sed "s/\-/_/g"`
+            echo "// $name" >> $2
+            echo "static NSString * const image_name_$varname = @\"${value}\";" >> $2
         else
             if [ -d "${1}/${name}" ];then
                 generationImageHForDir ${1}/${name} $2
