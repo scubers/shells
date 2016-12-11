@@ -6,25 +6,16 @@ targetFile=$2 # 目标头文件 target.h
 
 function generateHfile() {
 
-    if [ -e $2 ];then
-        rm $2
-    fi
-    touch $0
-
-
-    fileString="// test"
-    echo $fileString > $2
-
-    cat $1 | while read line
-    do
-        echo $line|grep -e "\"[a-zA-Z0-9_\-]*\" *= *\".*\";" > /dev/null
-        if [ $? -eq 0 ];then 
-            value=`echo $line | sed "s/ *=.*;//g"|sed "s/\"//g"`
-            key=`echo $value|sed "s/\-/_/g"`
-            string="static NSString * const i18n_$key = @\"$value\";"
-            echo "// $line" >> $2
-            echo "$string" >> $2
-        fi
+    echo "// test" > $2
+    spaceTemp="kjlskjfoijwef"
+    for name in `cat $1|grep "\"[a-zA-Z_ \-]*\" *= *\".*\";"|sed "s/ /$spaceTemp/g"`
+    do 
+        name=`echo $name|sed "s/$spaceTemp/ /g"|sed "s/ *= */=/g"`
+        value=`echo $name|sed "s/ *=.*//g"|sed "s/\"//g"`
+        key=`echo $value|sed "s/\-/_/g"|sed "s/ /_/g"`
+        echo "$key = $value"
+        echo "// $name" >> $2
+        echo "static NSString * const i18n_$key = @\"$value\";" >> $2
     done
 }
 

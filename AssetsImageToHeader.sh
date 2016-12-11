@@ -7,19 +7,16 @@ targetFile=$2 # 生成的头文件路径
 
 
 function generationImageHForDir() {
-    for name in `ls $1`
-    do
-        echo $name|grep -e ".*\.imageset" > /dev/null
-        if [ $? -eq 0 ];then
-            value=`echo $name | sed "s/\.imageset//g"`
-            varname=`echo $value|sed "s/\-/_/g"`
-            echo "// $name" >> $2
-            echo "static NSString * const image_name_$varname = @\"${value}\";" >> $2
-        else
-            if [ -d "${1}/${name}" ];then
-                generationImageHForDir ${1}/${name} $2
-            fi
-        fi
+    spaceTemp="_=_=_0000"
+
+    echo "// test" > $2
+    for name in `find $1 -type d|grep ".*\.imageset"|sed "s/^.*\///g"|sed "s/ /$spaceTemp/g"`
+    do 
+        name=`echo $name|sed "s/$spaceTemp/ /g"`
+        value=`echo $name|sed "s/\.imageset//g"`
+        varname=`echo $value|sed "s/\-/_/g"|sed "s/ /_/g"`
+        echo "// $name" >> $2
+        echo "static NSString * const image_name_$varname = @\"${value}\";" >> $2    
     done
 }
 
